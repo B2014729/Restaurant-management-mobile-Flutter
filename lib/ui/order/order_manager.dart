@@ -13,17 +13,53 @@ class OrderManager with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder(int idtable, int status, String token, List<CartModel> carts) {
-    _orders.insert(
-      0,
-      OrderModel(
-        idTable: idtable,
-        status: status,
-        token: token,
-        dishList: carts,
-        dateTime: DateTime.now(),
-      ),
-    );
+  List<OrderModel> get ordersHalfFirst {
+    List<OrderModel> orderHalf = [];
+    if (_orders.isNotEmpty) {
+      for (var i = 0; i <= _orders.length / 2; i++) {
+        orderHalf.add(_orders[i]);
+      }
+    }
+    return orderHalf;
+  }
+
+  List<OrderModel> get ordersHalfFinal {
+    List<OrderModel> orderHalf = [];
+
+    if (_orders.length >= 2) {
+      for (var i = _orders.length - 1; i > _orders.length / 2; i--) {
+        orderHalf.add(_orders[i]);
+      }
+    }
+    return orderHalf;
+  }
+
+  OrderModel? getOrderWithIdTable(idtable) {
+    try {
+      return _orders.firstWhere((order) => order.idTable == idtable);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void addOrder(OrderModel newOrder) {
+    _orders.insert(_orders.length, newOrder);
+
+    notifyListeners();
+  }
+
+  void updateOrder(List<CartModel> lishDishAdd, int idtable) {
+    for (var order in _orders) {
+      if (order.idTable == idtable) {
+        for (var dish in lishDishAdd) {
+          order.dishList.add(dish);
+        }
+      }
+    }
+  }
+
+  void clearOrder(int idtable) {
+    _orders.removeWhere((order) => order.idTable == idtable);
     notifyListeners();
   }
 }

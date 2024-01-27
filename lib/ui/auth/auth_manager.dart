@@ -73,15 +73,36 @@ import 'package:mobileapp/services/auth_service.dart';
 class AuthManager with ChangeNotifier {
   static String _token = '';
 
-  set setToken(String token) {
+  void setToken(String token) {
     _token = token;
+    notifyListeners();
   }
 
   String get getToken {
     return _token;
   }
 
+  bool isAuthToken() {
+    return _token.isNotEmpty ? true : false;
+  }
+
+  void resetToken() {
+    _token = '';
+    notifyListeners();
+  }
+
   Future<void> login(String email, String password) async {
-    String tokenFromApi = await AuthService.login(email, password);
+    String? tokenFromApi = await AuthService.login(email, password);
+    if (tokenFromApi != null) {
+      print("CHECK");
+      print(tokenFromApi);
+      setToken(tokenFromApi);
+    }
+  }
+
+  Future<void> logout() async {
+    if (isAuthToken()) {
+      resetToken();
+    }
   }
 }

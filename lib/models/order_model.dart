@@ -1,4 +1,6 @@
 import 'package:mobileapp/models/cart_model.dart';
+import 'package:mobileapp/models/dish_model.dart';
+import 'package:mobileapp/ui/dish/dish_manager.dart';
 
 class OrderModel {
   final int idTable;
@@ -53,6 +55,33 @@ class OrderModel {
 
   int get dishCount {
     return dishList.length;
+  }
+
+  List<Map<String, dynamic>> getListDishInOrder() {
+    List<Map<String, dynamic>> result = [];
+
+    for (var cart in dishList) {
+      DishModel? dish = DishManager().findById(cart.dishId);
+      if (dish != null) {
+        result.add({
+          'dishName': dish.name,
+          'dishPrice': dish.price,
+          'quantity': cart.quantity,
+        });
+      }
+    }
+    return result;
+  }
+
+  int totalPayment() {
+    int total = 0;
+    for (var cart in dishList) {
+      DishModel? dish = DishManager().findById(cart.dishId);
+      if (dish != null) {
+        total = total + ((dish.price * cart.quantity));
+      }
+    }
+    return total;
   }
 
   List<CartModel> get listCart {

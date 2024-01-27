@@ -6,6 +6,7 @@ import 'package:mobileapp/services/order_service.dart';
 import 'package:mobileapp/ui/auth/auth_manager.dart';
 import 'package:mobileapp/ui/cart/cart_card.dart';
 import 'package:mobileapp/ui/cart/cart_manager.dart';
+import 'package:mobileapp/ui/order/order_manager.dart';
 import 'package:mobileapp/ui/share/dialog_utils.dart';
 import 'package:mobileapp/ui/share/draw.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final carts = context.watch<CartManager>();
-
+    final orderManager = context.watch<OrderManager>();
     List<CartModel> cartItems = carts.dishs;
 
     return Scaffold(
@@ -100,7 +101,7 @@ class _CartScreenState extends State<CartScreen> {
                       hintStyle: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                       ),
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       focusColor: Colors.black,
                     ),
                   ),
@@ -120,6 +121,13 @@ class _CartScreenState extends State<CartScreen> {
                         );
 
                         OrderService.order(data);
+
+                        if (status == 0) {
+                          orderManager.addOrder(data);
+                        } else {
+                          orderManager.updateOrder(
+                              cartItems, int.parse(_controller.text));
+                        }
 
                         carts.clearAllItems();
                         notificationOrderSuccessful(context);

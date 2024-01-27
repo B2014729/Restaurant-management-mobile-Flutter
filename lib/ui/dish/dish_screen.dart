@@ -64,14 +64,19 @@ class _DishScreenState extends State<DishScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //List<DishModel> dish = [];
+    final isValue = ValueNotifier<bool>(false);
     final DishManager dishManager = (context).watch<DishManager>();
+
     if (dishManager.itemCount == 0) {
       dishManager.fectDishListFromAPI();
     }
 
     final dish = context.select<DishManager, List<DishModel>>(
         (dishManager) => dishManager.items);
+
+    if (dish.isNotEmpty) {
+      isValue.value = true;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -93,113 +98,123 @@ class _DishScreenState extends State<DishScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: Column(
-        children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.fromLTRB(10, 12, 0, 10),
-            child: Text(
-              'Wellcome to Beach Restaurant',
-              style: TextStyle(
-                color: Colors.orange,
-                // fontWeight: FontWeight.bold,
-                fontSize: 24,
-                letterSpacing: 1.5,
-              ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: const Color.fromARGB(92, 82, 79, 79),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: SizedBox(
-                child: Image.network(
-                    'https://studiovietnam.com/wp-content/uploads/2022/10/menu-thuc-an-02-1.jpg'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              //child: buildSearchField(context),
-              child: TextFormField(
-                onChanged: (value) {
-                  setState(() {
-                    result = search(value, dish);
-                  });
-                },
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
-                ),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Tìm kiếm',
-                  hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.white.withOpacity(0.5),
+      body: ValueListenableBuilder(
+        valueListenable: isValue,
+        builder: (context, value, child) {
+          if (value) {
+            return Column(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(10, 12, 0, 10),
+                  child: Text(
+                    'Wellcome to Beach Restaurant',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                      letterSpacing: 1.5,
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          const Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(10, 3, 0, 10),
-                child: Text(
-                  'Danh sách tất cả món ăn:',
-                  style: TextStyle(
-                    color: Colors.orange,
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    letterSpacing: 1,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: const Color.fromARGB(92, 82, 79, 79),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      child: Image.network(
+                          'https://studiovietnam.com/wp-content/uploads/2022/10/menu-thuc-an-02-1.jpg'),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: result.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    children: [
-                      DishCard(result[index]),
-                    ],
-                  );
-                }
+                Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    //child: buildSearchField(context),
+                    child: TextFormField(
+                      onChanged: (value) {
+                        setState(() {
+                          result = search(value, dish);
+                        });
+                      },
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Tìm kiếm',
+                        hintStyle: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10, 3, 0, 10),
+                      child: Text(
+                        'Danh sách tất cả món ăn:',
+                        style: TextStyle(
+                          color: Colors.orange,
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: result.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          children: [
+                            DishCard(result[index]),
+                          ],
+                        );
+                      }
 
-                // child: CustomScrollView(
-                //   slivers: <Widget>[
-                //     SliverFixedExtentList(
-                //       itemExtent: 100.0,
-                //       delegate: SliverChildBuilderDelegate(
-                //         childCount: result.length,
-                //         (BuildContext context, int index) {
-                //           return Row(
-                //             children: [
-                //               DishCard(result[index]),
-                //             ],
-                //           );
-                //         },
-                //       ),
-                //     ),
-                //   ],
-                // ),
+                      // child: CustomScrollView(
+                      //   slivers: <Widget>[
+                      //     SliverFixedExtentList(
+                      //       itemExtent: 100.0,
+                      //       delegate: SliverChildBuilderDelegate(
+                      //         childCount: result.length,
+                      //         (BuildContext context, int index) {
+                      //           return Row(
+                      //             children: [
+                      //               DishCard(result[index]),
+                      //             ],
+                      //           );
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      ),
                 ),
-          ),
-        ],
+              ],
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

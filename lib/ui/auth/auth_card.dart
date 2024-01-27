@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/ui/auth/auth_manager.dart';
+import 'package:provider/provider.dart';
 // import 'package:mobileapp/models/http_exception.dart';
 // import 'package:provider/provider.dart';
 
@@ -24,6 +26,7 @@ class _AuthCardState extends State<AuthCard> {
   };
   final _isSubmitting = ValueNotifier<bool>(false);
   final _passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
@@ -32,6 +35,12 @@ class _AuthCardState extends State<AuthCard> {
     _formKey.currentState!.save();
 
     _isSubmitting.value = true;
+
+    // await AuthService.login(_authData['username']!, _authData['password']!);
+    await context.read<AuthManager>().login(
+          _authData['username']!,
+          _authData['password']!,
+        );
 
     // try {
     //   await context.read<AuthManager>().login(
@@ -69,7 +78,7 @@ class _AuthCardState extends State<AuthCard> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                _buildEmailField(),
+                _buildUsernameField(),
                 _buildPasswordField(),
                 const SizedBox(
                   height: 20,
@@ -144,7 +153,7 @@ class _AuthCardState extends State<AuthCard> {
       obscureText: true,
       controller: _passwordController,
       validator: (value) {
-        if (value == null || value.length < 5) {
+        if (value == null || value.length < 3) {
           return 'Password không đủ 5 kí tự!';
         }
         return null;
@@ -155,7 +164,7 @@ class _AuthCardState extends State<AuthCard> {
     );
   }
 
-  Widget _buildEmailField() {
+  Widget _buildUsernameField() {
     return TextFormField(
       decoration: InputDecoration(
         labelText: 'Username',
@@ -171,7 +180,8 @@ class _AuthCardState extends State<AuthCard> {
         ),
       ),
       style: const TextStyle(color: Colors.white),
-      keyboardType: TextInputType.emailAddress,
+      controller: _usernameController,
+      keyboardType: TextInputType.text,
       validator: (value) {
         if (value!.isEmpty) {
           return 'Username không được để trống!';

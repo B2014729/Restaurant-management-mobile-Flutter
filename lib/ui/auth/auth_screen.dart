@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobileapp/ui/auth/auth_login_screen.dart';
+import 'package:mobileapp/ui/auth/auth_manager.dart';
 import 'package:mobileapp/ui/share/draw.dart';
+import 'package:provider/provider.dart';
 
 class AuthScreen extends StatelessWidget {
   static const routeName = "/auth-screen";
@@ -26,8 +28,8 @@ class AuthScreen extends StatelessWidget {
             onPressed: () {
               Navigator.of(context)
                 ..pop()
-                ..pushReplacementNamed(AuthLoginScreen.routeName);
-              //Navigator.of(context).pushNamed(AuthLoginScreen.routeName);
+                ..pushNamed(AuthLoginScreen.routeName);
+              (context).read<AuthManager>().logout();
             },
             icon: const Icon(
               Icons.logout,

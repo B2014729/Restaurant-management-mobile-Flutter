@@ -95,3 +95,30 @@ ScaffoldMessengerState notificationOrderSuccessful(BuildContext context) {
       ),
     );
 }
+
+ScaffoldMessengerState notificationRequestBill(BuildContext context) {
+  return ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Đã xuất hóa đơn",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+}

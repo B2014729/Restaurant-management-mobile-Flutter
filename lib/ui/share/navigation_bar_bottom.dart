@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:mobileapp/ui/auth/auth_screen.dart';
 import 'package:mobileapp/ui/cart/cart_screen.dart';
 import 'package:mobileapp/ui/dish/dish_screen.dart';
+import 'package:mobileapp/ui/order/order_screen.dart';
 
 class NavigationBarBottom extends StatefulWidget {
   static const routeName = '/navigator-bar';
@@ -17,7 +19,8 @@ class _NavigationBarBottomState extends State<NavigationBarBottom> {
   final List<Widget> _tabs = [
     const DishScreen(),
     const CartScreen(),
-    const AuthScreen()
+    const OrderScreen(),
+    const AuthScreen(),
   ];
 
   @override
@@ -31,6 +34,7 @@ class _NavigationBarBottomState extends State<NavigationBarBottom> {
     return Scaffold(
       body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         fixedColor: Colors.orange,
         unselectedItemColor: Colors.white,
         backgroundColor: const Color.fromARGB(255, 47, 47, 47),
@@ -50,6 +54,10 @@ class _NavigationBarBottomState extends State<NavigationBarBottom> {
             label: 'Đã gọi',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Ionicons.bag_check_sharp),
+            label: 'Bàn ăn',
+          ),
+            BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Cá nhân',
           ),

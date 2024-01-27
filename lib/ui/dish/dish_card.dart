@@ -90,7 +90,8 @@ class _DishCardState extends State<DishCard> {
           width: 45,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 2, 185, 8).withAlpha(22),
+              backgroundColor:
+                  const Color.fromARGB(255, 2, 185, 8).withAlpha(22),
             ),
             onPressed: () {
               carts.addItem(widget.dish.id, quantity, '');
