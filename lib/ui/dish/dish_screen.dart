@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobileapp/models/dish_model.dart';
@@ -8,6 +7,7 @@ import 'package:mobileapp/ui/dish/dish_manager.dart';
 import 'package:mobileapp/ui/share/draw.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class DishScreen extends StatefulWidget {
   static const routeName = '/dish-screen-home';
@@ -77,6 +77,40 @@ class _DishScreenState extends State<DishScreen> {
     if (dish.isNotEmpty) {
       isValue.value = true;
     }
+
+//Connect socket.io
+    final socket = IO.io('http://10.0.2.2:8000', <String, dynamic>{
+      'transports': ['websocket'],
+    });
+
+    socket.onConnect((_) {
+      print('Connected');
+    });
+
+    socket.on(
+      'ondishpaid',
+      (data) {
+        print('--------------------------------------------------');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Notification'),
+              content: Text(data.toString()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

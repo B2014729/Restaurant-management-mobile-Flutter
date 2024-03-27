@@ -38,7 +38,8 @@ dependencies:
   google_fonts: ^6.1.0
   ionicons: ^0.2.2
   http: ^1.1.0
-  web_socket_channel: ^2.4.0
+  socket_io_client: ^2.0.3+1
+ 
 
 
 dev_dependencies:
