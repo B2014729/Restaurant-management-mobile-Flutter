@@ -46,7 +46,7 @@ class OrderModel {
       'idTable': idTable,
       'dateTime ': dateTime.toString(),
       'status': status,
-      'token': 'kkkkkkkkkkkk',
+      'token': token,
       'idDish': idDish,
       'quantity': quantity,
       'note': note

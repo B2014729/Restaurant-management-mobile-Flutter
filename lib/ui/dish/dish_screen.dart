@@ -20,11 +20,52 @@ class DishScreen extends StatefulWidget {
 
 class _DishScreenState extends State<DishScreen> {
   List<DishModel> result = [];
+  late IO.Socket socket;
   //Future<List<DishModel>> result;
   @override
   void initState() {
     fetchProducts();
     super.initState();
+    socket = IO.io('http://10.0.2.2:8000', <String, dynamic>{
+      'transports': ['websocket'],
+    });
+
+    socket.onConnect((_) {
+      print('Connected');
+    });
+
+    //Connect socket.io
+
+    socket.on(
+      'ondishpaid',
+      (data) {
+        print('--------------------------------------------------');
+        print(data.toString());
+        _showDialog(data);
+      },
+    );
+  }
+
+  void _showDialog(data) {
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: const Text('Notification'),
+            content: Text(data.toString()),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Future<void> fetchProducts() async {
@@ -47,8 +88,6 @@ class _DishScreenState extends State<DishScreen> {
           result.add(DishModel.fromJson(jsonDish));
         }
       });
-    } else {
-      // Handle error if needed
     }
   }
 
@@ -78,39 +117,6 @@ class _DishScreenState extends State<DishScreen> {
       isValue.value = true;
     }
 
-//Connect socket.io
-    final socket = IO.io('http://10.0.2.2:8000', <String, dynamic>{
-      'transports': ['websocket'],
-    });
-
-    socket.onConnect((_) {
-      print('Connected');
-    });
-
-    socket.on(
-      'ondishpaid',
-      (data) {
-        print('--------------------------------------------------');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Notification'),
-              content: Text(data.toString()),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Close'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -130,6 +136,9 @@ class _DishScreenState extends State<DishScreen> {
             color: Colors.orange,
           ),
         ],
+        iconTheme: const IconThemeData(
+          color: Colors.white, //Set color cho icon drawer
+        ),
       ),
       drawer: const AppDrawer(),
       body: ValueListenableBuilder(

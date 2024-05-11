@@ -29,6 +29,7 @@ class _DishScreenOnTypeState extends State<DishScreenOnType> {
           "Danh sách món",
           style: GoogleFonts.pacifico(
             fontSize: 26,
+            color: const Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         backgroundColor: const Color.fromARGB(215, 19, 19, 19),
@@ -47,6 +48,9 @@ class _DishScreenOnTypeState extends State<DishScreenOnType> {
             ),
           ),
         ],
+        iconTheme: const IconThemeData(
+          color: Colors.white, //Set color cho icon drawer
+        ),
       ),
       drawer: const AppDrawer(),
       body: Column(

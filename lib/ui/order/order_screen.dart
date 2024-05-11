@@ -28,9 +28,13 @@ class _OrderScreenState extends State<OrderScreen> {
           'Dining table list',
           style: GoogleFonts.pacifico(
             fontSize: 26,
+            color: const Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         backgroundColor: const Color.fromARGB(215, 19, 19, 19),
+        iconTheme: const IconThemeData(
+          color: Colors.white, //Set color cho icon drawer
+        ),
       ),
       drawer: const AppDrawer(),
       body: Padding(

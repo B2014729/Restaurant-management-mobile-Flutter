@@ -38,9 +38,13 @@ class _CartScreenState extends State<CartScreen> {
           'Order',
           style: GoogleFonts.pacifico(
             fontSize: 26,
+            color: const Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         backgroundColor: const Color.fromARGB(215, 19, 19, 19),
+        iconTheme: const IconThemeData(
+          color: Colors.white, //Set color cho icon drawer
+        ),
       ),
       drawer: const AppDrawer(),
       body: Column(
@@ -113,6 +117,8 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () {
                     if (_controller.text != '') {
                       if (cartItems.isNotEmpty) {
+                        print('Check Token');
+                        print((context).read<AuthManager>().getToken);
                         OrderModel data = OrderModel(
                           idTable: int.parse(_controller.text),
                           status: status,

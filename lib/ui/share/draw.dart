@@ -18,8 +18,16 @@ class AppDrawer extends StatelessWidget {
           AppBar(
             title: const Row(
               children: <Widget>[
-                Icon(Icons.menu),
-                Text(' Danh mục sản phẩm'),
+                Icon(
+                  Icons.menu,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                Text(
+                  ' Danh mục sản phẩm',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                ),
               ],
             ),
             automaticallyImplyLeading: false,
